@@ -1,0 +1,69 @@
+#!/usr/bin/env node
+
+// readme.md
+
+var fs = require('fs')
+var md = require('marked')
+var http = require('http')
+
+// TODO configurable
+var host = 'localhost'
+var port = 8124
+
+var dir = process.cwd()
+var exts = 'markdown md'.split(' ')
+var names = 'README Readme readme'.split(' ')
+
+var file = ''
+names.some(function (name) {
+  return exts.some(function (ext) {
+    try {
+      var filename = dir + '/' + name + '.' + ext
+      var stat = fs.statSync(filename)
+      file = filename
+      return true
+    } catch (err) {
+      return false
+    }
+  })
+})
+
+if (!file) {
+  console.error('no readme.md found')
+  return process.exit(1)
+}
+
+var contents = fs.readFileSync(file, 'utf8')
+var html = md(contents)
+
+html = '<link href="https://a248.e.akamai.net/assets.github.com/assets/github-78df541aa7e7c0d038536bb979d896805331f6ee.css" rel="stylesheet">'
+     + '<link href="https://a248.e.akamai.net/assets.github.com/assets/github2-a2d333a1fd790f13b3c38ae51111c0acdbca7b65.css" rel="stylesheet">'
+     + '<div id="readme"><article class="markdown-body entry-content">'
+     + html
+     + '</article></div>'
+
+if (!/<body/i.test(html)) {
+  html = '<body>' + html + '</body>'
+}
+if (!/<html/i.test(html)) {
+  html = '<html>' + html + '</html>'
+}
+
+var server = http.createServer(function (req, res) {
+  res.writeHead(200, { 'Content-Type': 'text/html' })
+  res.end(html)
+}).listen(port, host)
+
+server.on('listening', function () {
+  var url = 'http://' + host + ':' + port
+  console.log("\n  view your readme at \u001B[32m%s/\u001B[0m", url)
+  console.log('  press CTRL+C to quit')
+
+  // open in browser on mac
+  if ('darwin' != process.platform) return
+
+  require('child_process').exec('open ' + url, function (err) {
+    // ignore errors
+  })
+});
+

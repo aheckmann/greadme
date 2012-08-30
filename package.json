@@ -1,0 +1,27 @@
+{
+  "name": "greadme",
+  "version": "0.0.1",
+  "description": "locally preview your README.md github style",
+  "bin": { "greadme": "./bin/greadme" },
+  "scripts": {
+    "test": "make test"
+  },
+  "keywords": [
+    "readme",
+    "markdown",
+    "github",
+    "git",
+    "md",
+    "server",
+    "preview"
+  ],
+  "dependencies": {
+    "marked": "0.2.5"
+  },
+  "devDependencies": {
+    "mocha": "1.4.1"
+  },
+  "author": "Aaron Heckmann <aaron.heckmann+github@gmail.com>",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git://github.com/aheckmann/greadme.git" }
+}
