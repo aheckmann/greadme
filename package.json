@@ -1,6 +1,6 @@
 {
   "name": "greadme",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "locally preview your README.md github style",
   "bin": { "greadme": "./bin/greadme" },
   "scripts": {
