@@ -16,7 +16,8 @@
     "preview"
   ],
   "dependencies": {
-    "marked": "0.2.5"
+    "marked": "0.2.5",
+    "request": "2.11.1"
   },
   "devDependencies": {
     "mocha": "1.4.1"

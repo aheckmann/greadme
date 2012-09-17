@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
-// readme.md
-
 var fs = require('fs')
 var md = require('marked')
 var http = require('http')
+var request = require('request')
 
 // TODO configurable
 var host = 'localhost'
@@ -35,35 +34,58 @@ if (!file) {
 
 var contents = fs.readFileSync(file, 'utf8')
 var html = md(contents)
+var stylesheet = ''
 
-html = '<link href="https://a248.e.akamai.net/assets.github.com/assets/github-78df541aa7e7c0d038536bb979d896805331f6ee.css" rel="stylesheet">'
-     + '<link href="https://a248.e.akamai.net/assets.github.com/assets/github2-a2d333a1fd790f13b3c38ae51111c0acdbca7b65.css" rel="stylesheet">'
-     + '<div id="readme"><article class="markdown-body entry-content">'
+html = '<div id="readme"><article class="markdown-body entry-content">'
      + html
      + '</article></div>'
 
-if (!/<body/i.test(html)) {
-  html = '<body>' + html + '</body>'
-}
-if (!/<html/i.test(html)) {
-  html = '<html>' + html + '</html>'
-}
+// get github css
+request("https://github.com/aheckmann/greadme", function (err, res, body) {
+  var css = []
 
-var server = http.createServer(function (req, res) {
-  res.writeHead(200, { 'Content-Type': 'text/html' })
-  res.end(html)
-}).listen(port, host)
+  if (err) {
+    // ignore error, use old css instead
+    console.log('\u001B[35m  %s\u001B[0m', 'could not retreive latest github css. using old version');
+    css.push('/css/style.css')
+    stylesheet = fs.readFileSync(__dirname + '/../css/style.css', 'utf8');
 
-server.on('listening', function () {
-  var url = 'http://' + host + ':' + port
-  console.log("\n  view your readme at \u001B[32m%s/\u001B[0m", url)
-  console.log('  press CTRL+C to quit')
+  } else {
+    var rgx = /href=["']([^"']+\.css)/g
+    ;(body || '').replace(rgx, function (_, href) {
+      css.push(href);
+    })
+  }
 
-  // open in browser on mac
-  if ('darwin' != process.platform) return
-
-  require('child_process').exec('open ' + url, function (err) {
-    // ignore errors
+  css.reverse().forEach(function (href) {
+    html = '<link href="' + href + '" rel="stylesheet">' + html;
   })
-});
+
+  html = '<html><body>' + html + '</body></html>'
+
+  var server = http.createServer(function (req, res) {
+    if (/css$/.test(req.url)) {
+      res.writeHead(200, { 'Content-Type': 'text/css' })
+      res.end(stylesheet)
+      return;
+    }
+
+    res.writeHead(200, { 'Content-Type': 'text/html' })
+    res.end(html)
+  }).listen(port, host)
+
+  server.on('listening', function () {
+    var url = 'http://' + host + ':' + port
+    console.log("\n  view your readme at \u001B[32m%s/\u001B[0m", url)
+    console.log('  press CTRL+C to quit')
+
+    // open in browser on mac
+    if ('darwin' != process.platform) return
+
+    require('child_process').exec('open ' + url, function (err) {
+      // ignore errors
+    })
+  });
+
+})
 
