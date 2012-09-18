@@ -47,17 +47,22 @@ request("https://github.com/aheckmann/greadme", function (err, res, body) {
   if (err) {
     // ignore error, use old css instead
     console.log('\u001B[35m  %s\u001B[0m', 'could not retreive latest github css. using old version');
-    css.push('/css/style.css')
+    css.unshift('/css/style.css')
     stylesheet = fs.readFileSync(__dirname + '/../css/style.css', 'utf8');
 
   } else {
     var rgx = /href=["']([^"']+\.css)/g
     ;(body || '').replace(rgx, function (_, href) {
-      css.push(href);
+      css.unshift(href);
     })
   }
 
-  css.reverse().forEach(function (href) {
+  html = '<style type="text/css">'
+       + '#readme { width: 920px;margin: 0 auto; }'
+       + '</style>'
+       + html;
+
+  css.forEach(function (href) {
     html = '<link href="' + href + '" rel="stylesheet">' + html;
   })
 
