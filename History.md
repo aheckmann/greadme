@@ -1,4 +1,10 @@
 
+0.0.3 / 2012-09-26
+==================
+
+  * added; support for specifying a markdown file
+  * added; source href attribution
+
 0.0.2 / 2012-09-17
 ==================
 
