@@ -11,21 +11,24 @@ var port = 8124
 
 var dir = process.cwd()
 var exts = 'markdown md'.split(' ')
-var names = 'README Readme readme'.split(' ')
 
-var file = ''
-names.some(function (name) {
-  return exts.some(function (ext) {
-    try {
-      var filename = dir + '/' + name + '.' + ext
-      var stat = fs.statSync(filename)
-      file = filename
-      return true
-    } catch (err) {
-      return false
-    }
+var file = process.argv[2] || ''
+
+if (!file) {
+  var names = 'README Readme readme'.split(' ')
+  names.some(function (name) {
+    return exts.some(function (ext) {
+      try {
+        var filename = dir + '/' + name + '.' + ext
+        var stat = fs.statSync(filename)
+        file = filename
+        return true
+      } catch (err) {
+        return false
+      }
+    })
   })
-})
+}
 
 if (!file) {
   console.error('no readme.md found')
