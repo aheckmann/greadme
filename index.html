@@ -40,18 +40,17 @@
 
 <h2>Usage</h2>
 
-<pre><code>$ cd to/dir/with/readme.markdown
-$ greadme
+<pre><code>$ greadme [path/to/some.markdown]
 
-   view your readme at http://localhost:8124/
+   view your markdown at http://localhost:8124/
    press CTRL+C to quit
 </code></pre>
 
-<p>Execute the <code>greadme</code> command from a directory holding your README and it will be parsed and served from a locally running http server.</p>
+<p>Execute <code>greadme</code> passing an optional path to a markdown file and it will be parsed and served from a locally running http server with Github styling applied.</p>
 
-<p>If you are running on a mac, a brower will automatically be opened to the readme preview.</p>
+<p>If you are running on a mac, a browser will automatically be opened to preview the markdown.</p>
 
-<p>The following filenames and extensions are tried, if none are found, an error is printed and the program exits.</p>
+<p>When no file path is specified, <code>greadme</code> attempts to locate a Readme file in the current directory and renders it instead. The following filenames and extensions are tried, if none are found, an error is printed and the program exits.</p>
 
 <ul>
 <li>README.md</li>
@@ -62,11 +61,11 @@ $ greadme
 <li>readme.markdown</li>
 </ul><h2>Notes</h2>
 
-<p>This just hardlinks to githubs css so the styling may not last forever. If its out of date send a pull request or open an issue.</p>
+<p>An attempt is made to grab the latest css from Github. If the attempt fails we fall back to styling with an old version.</p>
 
 <h2>License</h2>
 
-<p><a href="https://github.com/aheckmann/aheckmann/blob/master/LICENSE">MIT</a></p>
+<p><a href="https://github.com/aheckmann/greadme/blob/master/LICENSE">MIT</a></p>
         </section>
 
         <footer>
