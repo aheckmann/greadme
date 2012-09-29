@@ -32,8 +32,8 @@ The following filenames and extensions are tried, if none are found, an error is
 
 ## Notes
 
-This just hardlinks to githubs css so the styling may not last forever. If its out of date send a pull request or open an issue.
+An attempt is made to grab the latest css from Github. If the attempt fails we fall back to styling with an old version.
 
 ## License
 
-[MIT](https://github.com/aheckmann/aheckmann/blob/master/LICENSE)
+[MIT](https://github.com/aheckmann/greadme/blob/master/LICENSE)
