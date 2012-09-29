@@ -11,17 +11,16 @@ via npm:
 
 ## Usage
 
-    $ cd to/dir/with/readme.markdown
-    $ greadme
+    $ greadme [path/to/some.markdown]
 
        view your readme at http://localhost:8124/
        press CTRL+C to quit
 
-Execute the `greadme` command from a directory holding your README and it will be parsed and served from a locally running http server.
+Execute `greadme` passing an optional path to a markdown file and it will be parsed and served from a locally running http server with Github styling applied.
 
-If you are running on a mac, a brower will automatically be opened to the readme preview.
+If you are running on a mac, a browser will automatically be opened to preview the markdown.
 
-The following filenames and extensions are tried, if none are found, an error is printed and the program exits.
+When no file path is specified, `greadme` attempts to locate a Readme file in the current directory and renders it instead. The following filenames and extensions are tried, if none are found, an error is printed and the program exits.
 
   - README.md
   - README.markdown
