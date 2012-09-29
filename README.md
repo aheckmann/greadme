@@ -13,7 +13,7 @@ via npm:
 
     $ greadme [path/to/some.markdown]
 
-       view your readme at http://localhost:8124/
+       view your markdown at http://localhost:8124/
        press CTRL+C to quit
 
 Execute `greadme` passing an optional path to a markdown file and it will be parsed and served from a locally running http server with Github styling applied.

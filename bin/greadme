@@ -84,7 +84,7 @@ request("https://github.com/aheckmann/greadme", function (err, res, body) {
 
   server.on('listening', function () {
     var url = 'http://' + host + ':' + port
-    console.log("\n  view your readme at \u001B[32m%s/\u001B[0m", url)
+    console.log("\n  view your markdown at \u001B[32m%s/\u001B[0m", url)
     console.log('  press CTRL+C to quit')
 
     // open in browser on mac
