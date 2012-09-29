@@ -1,7 +1,7 @@
 #greadme
 ===========
 
-Locally preview your README.md with github-like styling applied.
+Locally preview your markdown, Github style.
 
 ## Installation
 
