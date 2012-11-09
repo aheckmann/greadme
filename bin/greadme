@@ -44,7 +44,7 @@ html = '<div id="readme"><article class="markdown-body entry-content">'
      + '</article></div>'
 
 // get github css
-request("https://github.com/aheckmann/greadme", function (err, res, body) {
+request({ uri: "https://github.com/aheckmann/greadme", timeout: 4000 }, function (err, res, body) {
   var css = []
 
   if (err) {
