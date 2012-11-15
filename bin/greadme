@@ -1,22 +1,23 @@
 #!/usr/bin/env node
 
+var express = require('express');
+var app = express();
+var path = require('path');
 var fs = require('fs')
 var md = require('marked')
 var http = require('http')
 var request = require('request')
 
 // TODO configurable
+var arg = process.argv[2];
 var host = 'localhost'
-var port = 8124
+var port = +(arg||8124)
 
-var dir = process.cwd()
-var exts = 'markdown md'.split(' ')
-
-var file = process.argv[2] || ''
-
-if (!file) {
+function readme(dir) {
+  var exts = 'markdown md'.split(' ')
+  var file;
   var names = 'README Readme readme'.split(' ')
-  names.some(function (name) {
+  if (names.some(function (name) {
     return exts.some(function (ext) {
       try {
         var filename = dir + '/' + name + '.' + ext
@@ -27,66 +28,96 @@ if (!file) {
         return false
       }
     })
+  })) {
+    return file;
+  }
+}
+
+function getStyle(cb) {
+  request({ uri: "https://github.com/aheckmann/greadme", timeout: 4000 }, function (err, res, body) {
+    try {
+      var css = []
+      if (err) {
+        // ignore error, use old css instead
+        console.log('\u001B[35m  %s\u001B[0m', 'could not retreive latest github css. using old version');
+        css.unshift('/css/style.css')
+      } else {
+        var rgx = /href=["']([^"']+\.css)/g
+        ;(body || '').replace(rgx, function (_, href) {
+          css.unshift(href);
+        })
+      }
+    } catch (ex) {
+      return cb(ex);
+    }
+    cb(null, css);
+  });
+}
+
+function listDir(dir) {
+  var all = fs.readdirSync(dir);
+  var md = [];
+  var dirs = dir == process.cwd() ? [] : ['..'];
+  all.forEach(function (item) {
+    var stat = fs.statSync(path.join(dir, item));
+    if (stat.isDirectory()) {
+      dirs.push(item);
+    } else if (stat.isFile() && (/\.md$/.test(item) || /\.markdown$/.test(item))) {
+      md.push(item);
+    }
+  });
+  function canonical(item) {
+    return {
+      href: path.join(dir, item).replace(process.cwd(), '').replace(/\\/g, '/') || '/',
+      name: item
+    };
+  }
+  return {
+    md: md.map(canonical),
+    dirs: dirs.map(canonical)
+  }
+}
+
+function render(fileContent, cb) {
+  request({
+    url: 'https://api.github.com/markdown/raw',
+    body: fileContent,
+    method: 'POST',
+    headers: {
+      'content-type': 'text/plain'
+    },
+    timeout: 2000
+  }, function (err, res, body) {
+    if (err) console.log(err);
+    if (err || res.statusCode != 200) {
+      return cb(null, md(fileContent));
+    } else {
+      return cb(null, body);
+    }
   })
 }
-
-if (!file) {
-  console.error('no readme.md found')
-  return process.exit(1)
-}
-
-function getHTML(file, css) {
-  var contents = fs.readFileSync(file, 'utf8')
-  var html = md(contents)
-
-
-  html = '<div id="readme"><article class="markdown-body entry-content">'
-       + html
-       + '</article></div>'
-
-  html = '<style type="text/css">'
-       + '#readme { width: 920px;margin: 0 auto; }'
-       + '</style>'
-       + html;
-
-  css.forEach(function (href) {
-    html = '<link href="' + href + '" rel="stylesheet">' + html;
-  })
-
-  html = '<html><body>' + html + '</body></html>'
-
-  return html;
-}
-
-var stylesheet = ''
 
 // get github css
-request({ uri: "https://github.com/aheckmann/greadme", timeout: 4000 }, function (err, res, body) {
-  var css = []
+getStyle(function (err, css) {
+  if (err) throw err;
 
-  if (err) {
-    // ignore error, use old css instead
-    console.log('\u001B[35m  %s\u001B[0m', 'could not retreive latest github css. using old version');
-    css.unshift('/css/style.css')
-    stylesheet = fs.readFileSync(__dirname + '/../css/style.css', 'utf8');
-
-  } else {
-    var rgx = /href=["']([^"']+\.css)/g
-    ;(body || '').replace(rgx, function (_, href) {
-      css.unshift(href);
-    })
-  }
-
-  var server = http.createServer(function (req, res) {
-    if (/css$/.test(req.url)) {
-      res.writeHead(200, { 'Content-Type': 'text/css' })
-      res.end(stylesheet)
-      return;
-    }
-
-    res.writeHead(200, { 'Content-Type': 'text/html' })
-    res.end(getHTML(file, css))
-  }).listen(port, host)
+  app.use(express.favicon());
+  app.use('/css', express.static(path.join(__dirname, '..', 'css')))
+  app.use(function (req, res, next) {
+    var p = path.join(process.cwd(), req.url.substring(1));
+    var stat = fs.statSync(p);
+    var dir = stat.isDirectory();
+    var file = dir ? readme(p) : p;
+    var contents = file ? fs.readFileSync(file, 'utf8') : 'No readme found';
+    render(contents, function (err, markdown) {
+      res.render(path.join(__dirname, '..', 'view.ejs'), {
+        css: css,
+        markdown: markdown,
+        dir: dir && listDir(p)
+      });
+    });
+  });
+  var server = http.createServer(app).listen(port, host)
 
   server.on('listening', function () {
     var url = 'http://' + host + ':' + port
