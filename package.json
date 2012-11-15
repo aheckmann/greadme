@@ -2,7 +2,9 @@
   "name": "greadme",
   "version": "0.0.5",
   "description": "Locally preview your markdown, Github style",
-  "bin": { "greadme": "./bin/greadme" },
+  "bin": {
+    "greadme": "./bin/greadme"
+  },
   "scripts": {
     "test": "make test"
   },
@@ -17,12 +19,17 @@
   ],
   "dependencies": {
     "marked": "0.2.5",
-    "request": "2.11.1"
+    "request": "2.11.1",
+    "express": "3.0.3",
+    "ejs": "~0.8.3"
   },
   "devDependencies": {
     "mocha": "1.4.1"
   },
   "author": "Aaron Heckmann <aaron.heckmann+github@gmail.com>",
   "license": "MIT",
-  "repository": { "type": "git", "url": "git://github.com/aheckmann/greadme.git" }
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/aheckmann/greadme.git"
+  }
 }
