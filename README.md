@@ -20,7 +20,7 @@ Execute `greadme` passing an optional path to a markdown file and it will be par
 
 If you are running on a mac, a browser will automatically be opened to preview the markdown.
 
-When no file path is specified, `greadme` attempts to locate a Readme file in the current directory and renders it instead. The following filenames and extensions are tried.
+When no file path is specified, greadme displays a file browser of the current directory, similar to Github. The following filenames and extensions are displayed.
 
   - README.md
   - README.markdown
@@ -28,8 +28,6 @@ When no file path is specified, `greadme` attempts to locate a Readme file in th
   - Readme.markdown
   - readme.md
   - readme.markdown
-
-`greadme` will also display a listing of the current directory that you can browse arround.
 
 ## Notes
 
