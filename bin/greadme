@@ -110,7 +110,7 @@ getStyle(function (err, css) {
         res.render(path.join(__dirname, '..', 'view.ejs'), {
           css: css,
           markdown: markdown,
-          dir: dir && listDir(p)
+          dir: false
         });
       });
     } else {
