@@ -9,9 +9,9 @@ var http = require('http')
 var request = require('request')
 
 // TODO configurable
-var arg = process.argv[2];
+var fileArg = process.argv[2];
 var host = 'localhost'
-var port = +(arg||8124)
+var port = 8124
 
 function readme(dir) {
   var exts = 'markdown md'.split(' ')
@@ -104,18 +104,30 @@ getStyle(function (err, css) {
   app.use(express.favicon());
   app.use('/css', express.static(path.join(__dirname, '..', 'css')))
   app.use(function (req, res, next) {
-    var p = path.join(process.cwd(), req.url.substring(1));
-    var stat = fs.statSync(p);
-    var dir = stat.isDirectory();
-    var file = dir ? readme(p) : p;
-    var contents = file ? fs.readFileSync(file, 'utf8') : 'No readme found';
-    render(contents, function (err, markdown) {
-      res.render(path.join(__dirname, '..', 'view.ejs'), {
-        css: css,
-        markdown: markdown,
-        dir: dir && listDir(p)
+    if (fileArg) {
+      render(fs.readFileSync(path.join(process.cwd(), fileArg), 'utf8'), function (err, markdown) {
+        if (err) return next(err);
+        res.render(path.join(__dirname, '..', 'view.ejs'), {
+          css: css,
+          markdown: markdown,
+          dir: dir && listDir(p)
+        });
       });
-    });
+    } else {
+      var p = path.join(process.cwd(), req.url.substring(1));
+      var stat = fs.statSync(p);
+      var dir = stat.isDirectory();
+      var file = dir ? readme(p) : p;
+      var contents = file ? fs.readFileSync(file, 'utf8') : 'No readme found';
+      render(contents, function (err, markdown) {
+        if (err) return next(err);
+        res.render(path.join(__dirname, '..', 'view.ejs'), {
+          css: css,
+          markdown: markdown,
+          dir: dir && listDir(p)
+        });
+      });
+    }
   });
   var server = http.createServer(app).listen(port, host)
 
