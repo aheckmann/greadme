@@ -35,13 +35,30 @@ if (!file) {
   return process.exit(1)
 }
 
-var contents = fs.readFileSync(file, 'utf8')
-var html = md(contents)
-var stylesheet = ''
+function getHTML(file, css) {
+  var contents = fs.readFileSync(file, 'utf8')
+  var html = md(contents)
 
-html = '<div id="readme"><article class="markdown-body entry-content">'
-     + html
-     + '</article></div>'
+
+  html = '<div id="readme"><article class="markdown-body entry-content">'
+       + html
+       + '</article></div>'
+
+  html = '<style type="text/css">'
+       + '#readme { width: 920px;margin: 0 auto; }'
+       + '</style>'
+       + html;
+
+  css.forEach(function (href) {
+    html = '<link href="' + href + '" rel="stylesheet">' + html;
+  })
+
+  html = '<html><body>' + html + '</body></html>'
+
+  return html;
+}
+
+var stylesheet = ''
 
 // get github css
 request({ uri: "https://github.com/aheckmann/greadme", timeout: 4000 }, function (err, res, body) {
@@ -60,17 +77,6 @@ request({ uri: "https://github.com/aheckmann/greadme", timeout: 4000 }, function
     })
   }
 
-  html = '<style type="text/css">'
-       + '#readme { width: 920px;margin: 0 auto; }'
-       + '</style>'
-       + html;
-
-  css.forEach(function (href) {
-    html = '<link href="' + href + '" rel="stylesheet">' + html;
-  })
-
-  html = '<html><body>' + html + '</body></html>'
-
   var server = http.createServer(function (req, res) {
     if (/css$/.test(req.url)) {
       res.writeHead(200, { 'Content-Type': 'text/css' })
@@ -79,7 +85,7 @@ request({ uri: "https://github.com/aheckmann/greadme", timeout: 4000 }, function
     }
 
     res.writeHead(200, { 'Content-Type': 'text/html' })
-    res.end(html)
+    res.end(getHTML(file, css))
   }).listen(port, host)
 
   server.on('listening', function () {
