@@ -1,4 +1,11 @@
 
+0.1.0 / 2012-11-15
+==================
+
+  * added directory browser support #2 [ForbesLindesay](https://github.com/ForbesLindesay)
+  * render on github server if possible #2 [ForbesLindesay](https://github.com/ForbesLindesay)
+  * live rendering support (local changes are reflected on page refresh) #2 [ForbesLindesay](https://github.com/ForbesLindesay)
+
 0.0.5 / 2012-11-09
 ==================
 
