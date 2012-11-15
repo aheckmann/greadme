@@ -11,12 +11,12 @@ via npm:
 
 ## Usage
 
-    $ greadme [port-number]
+    $ greadme [path/to/some.markdown]
 
        view your markdown at http://localhost:8124/
        press CTRL+C to quit
 
-Execute `greadme` passing an optional port number and markdown in the current directory will be parsed and served from a locally running http server with Github styling applied.
+Execute `greadme` passing an optional path to a markdown file and it will be parsed and served from a locally running http server with Github styling applied.
 
 If you are running on a mac, a browser will automatically be opened to preview the markdown.
 
@@ -28,6 +28,8 @@ When no file path is specified, `greadme` attempts to locate a Readme file in th
   - Readme.markdown
   - readme.md
   - readme.markdown
+
+`greadme` will also display a listing of the current directory that you can browse arround.
 
 ## Notes
 
