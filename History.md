@@ -1,4 +1,9 @@
 
+0.1.1 / 2012-11-16
+==================
+
+  * Use a cross browser open implimentation #3 [ForbesLindesay](https://github.com/ForbesLindesay)
+
 0.1.0 / 2012-11-15
 ==================
 
