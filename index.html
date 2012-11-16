@@ -19,7 +19,7 @@
 
         <header>
           <h1>Greadme</h1>
-          <h2>Locally preview your README.md with github styling</h2>
+          <h2>Locally preview your markdown, Github style.</h2>
         </header>
 
         <section id="downloads" class="clearfix">
@@ -31,7 +31,9 @@
         <hr>
 
         <section id="main_content">
-          <h2>Installation</h2>
+          <p><img src="https://dl.dropbox.com/u/11198966/greadme-preview.png" alt=""></p>
+
+<h2>Installation</h2>
 
 <p>via npm:</p>
 
@@ -46,24 +48,25 @@
    press CTRL+C to quit
 </code></pre>
 
-<p>Execute <code>greadme</code> passing an optional path to a markdown file and it will be parsed and served from a locally running http server with Github styling applied.</p>
+<p>Execute <code>greadme</code> passing an optional path to a markdown file and it will be parsed and served from a locally running http server with Github styling applied. When no file path is specified, <code>greadme</code> displays a file browser of the current directory, similar to Github.</p>
 
-<p>If you are running on a mac, a browser will automatically be opened to preview the markdown.</p>
+<p>A browser will automatically be opened to preview the markdown if your OS supports it.</p>
 
-<p>When no file path is specified, <code>greadme</code> displays a file browser of the current directory, similar to Github. The following filenames and extensions are displayed.</p>
+<p>Files with the following extensions are rendered.</p>
 
 <ul>
-<li>README.md</li>
-<li>README.markdown</li>
-<li>Readme.md</li>
-<li>Readme.markdown</li>
-<li>readme.md</li>
-<li>readme.markdown</li>
+<li>.md</li>
+<li>.markdown</li>
 </ul><h2>Notes</h2>
 
-<p>An attempt is made to grab the latest css from Github. If the attempt fails we fall back to styling with an old version.</p>
+<p>An attempt is made to use the <a href="http://developer.github.com/v3/markdown/">Github markdown rendering api</a> and Githubs stylesheets. If the attempt fails we fall back to rendering locally.</p>
 
-<h2>License</h2>
+<h2>Contributors</h2>
+
+<ul>
+<li><a href="https://github.com/aheckmann">Aaron Heckmann</a></li>
+<li><a href="https://github.com/ForbesLindesay">Forbes Lindesay</a></li>
+</ul><h2>License</h2>
 
 <p><a href="https://github.com/aheckmann/greadme/blob/master/LICENSE">MIT</a></p>
         </section>
