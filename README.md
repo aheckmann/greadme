@@ -33,6 +33,11 @@ When no file path is specified, greadme displays a file browser of the current d
 
 An attempt is made to grab the latest css from Github. If the attempt fails we fall back to styling with an old version.
 
+## Contributors
+
+- [Aaron Heckmann](https://github.com/aheckmann)
+- [Forbes Lindesay](https://github.com/ForbesLindesay)
+
 ## License
 
 [MIT](https://github.com/aheckmann/greadme/blob/master/LICENSE)
