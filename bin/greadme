@@ -7,6 +7,7 @@ var fs = require('fs')
 var md = require('marked')
 var http = require('http')
 var request = require('request')
+var open = require('open');
 
 // TODO configurable
 var fileArg = process.argv[2];
@@ -136,10 +137,7 @@ getStyle(function (err, css) {
     console.log("\n  view your markdown at \u001B[32m%s/\u001B[0m", url)
     console.log('  press CTRL+C to quit')
 
-    // open in browser on mac
-    if ('darwin' != process.platform) return
-
-    require('child_process').exec('open ' + url, function (err) {
+    open(url, function (err) {
       // ignore errors
     })
   });

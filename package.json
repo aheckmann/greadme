@@ -21,7 +21,8 @@
     "marked": "0.2.5",
     "request": "2.11.1",
     "express": "3.0.3",
-    "ejs": "~0.8.3"
+    "ejs": "0.8.3",
+    "open": "0.0.2"
   },
   "devDependencies": {
     "mocha": "1.4.1"
