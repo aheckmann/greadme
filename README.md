@@ -3,6 +3,8 @@
 
 Locally preview your markdown, Github style.
 
+![](https://dl.dropbox.com/u/11198966/greadme-preview.png)
+
 ## Installation
 
 via npm:
@@ -16,22 +18,18 @@ via npm:
        view your markdown at http://localhost:8124/
        press CTRL+C to quit
 
-Execute `greadme` passing an optional path to a markdown file and it will be parsed and served from a locally running http server with Github styling applied.
+Execute `greadme` passing an optional path to a markdown file and it will be parsed and served from a locally running http server with Github styling applied. When no file path is specified, `greadme` displays a file browser of the current directory, similar to Github.
 
-If you are running on a mac, a browser will automatically be opened to preview the markdown.
+A browser will automatically be opened to preview the markdown if your OS supports it.
 
-When no file path is specified, greadme displays a file browser of the current directory, similar to Github. The following filenames and extensions are displayed.
+Files with the following extensions are rendered.
 
-  - README.md
-  - README.markdown
-  - Readme.md
-  - Readme.markdown
-  - readme.md
-  - readme.markdown
+  - .md
+  - .markdown
 
 ## Notes
 
-An attempt is made to grab the latest css from Github. If the attempt fails we fall back to styling with an old version.
+An attempt is made to use the [Github markdown rendering api](http://developer.github.com/v3/markdown/) and Githubs stylesheets. If the attempt fails we fall back to rendering locally.
 
 ## Contributors
 
