@@ -1,4 +1,10 @@
 
+0.1.2 / 2013-01-03
+==================
+
+  * Add a charset meta tag to the template #5 [domenic](https://github.com/domenic)
+  * set process.title
+
 0.1.1 / 2012-11-16
 ==================
 

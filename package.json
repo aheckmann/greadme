@@ -1,6 +1,6 @@
 {
   "name": "greadme",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Locally preview your markdown, Github style",
   "bin": {
     "greadme": "./bin/greadme"
