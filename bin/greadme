@@ -37,7 +37,7 @@ function readme(dir) {
 }
 
 function getStyle(cb) {
-  request({ uri: "https://github.com/aheckmann/greadme", timeout: 4000 }, function (err, res, body) {
+  request({ uri: "https://github.com/aheckmann/greadme", timeout: 4000, headers: { 'user-agent': 'greadme' } }, function (err, res, body) {
     try {
       var css = []
       if (err) {
@@ -87,7 +87,8 @@ function render(fileContent, cb) {
     body: fileContent,
     method: 'POST',
     headers: {
-      'content-type': 'text/plain'
+      'content-type': 'text/plain',
+      'user-agent': 'greadme'
     },
     timeout: 2000
   }, function (err, res, body) {
