@@ -1,4 +1,10 @@
 
+0.1.3 / 2013-07-08
+==================
+
+  * Update dependencies #7 [ForbesLindesay](https://github.com/ForbesLindesay)
+  * Add a user agent to all github requests #6 [ForbesLindesay](https://github.com/ForbesLindesay)
+
 0.1.2 / 2013-01-03
 ==================
 
