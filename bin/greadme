@@ -16,7 +16,7 @@ var fileArg = process.argv[2];
 var host = 'localhost'
 // HOTFIX: use mutiple versions of greadme by configable port number. Use -p [port number].
 // This fix is of quick fix quality.
-var port = process.argv.indexOf("-p") > 0 && process.argv[process.argv.indexOf("-p") + 1] || 8124
+var port = (process.argv.indexOf("-p") > 0 && process.argv[process.argv.indexOf("-p") + 1]) || 8124
 
 function readme(dir) {
   var exts = 'markdown md'.split(' ')
