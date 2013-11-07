@@ -11,24 +11,34 @@ var open = require('open');
 
 process.title = 'greadme';
 
-// TODO configurable
-var fileArg = process.argv[2];
-var host = 'localhost'
-var port = 8124
+var args = process.argv.slice();
+var host = 'localhost';
+var port;
+var pIndex;
 
-function readme(dir) {
-  var exts = 'markdown md'.split(' ')
+if (~(pIndex = args.indexOf('--port'))) {
+  port = args[pIndex + 1];
+  // remove port arguments
+  args.splice(pIndex, 2);
+} else {
+  port = 8124;
+}
+
+var fileArg = args[2];
+
+function readme (dir) {
+  var exts = 'markdown md'.split(' ');
   var file;
-  var names = 'README Readme readme'.split(' ')
+  var names = 'README Readme readme'.split(' ');
   if (names.some(function (name) {
     return exts.some(function (ext) {
       try {
-        var filename = dir + '/' + name + '.' + ext
-        var stat = fs.statSync(filename)
-        file = filename
-        return true
+        var filename = dir + '/' + name + '.' + ext;
+        var stat = fs.statSync(filename);
+        file = filename;
+        return true;
       } catch (err) {
-        return false
+        return false;
       }
     })
   })) {
@@ -36,10 +46,10 @@ function readme(dir) {
   }
 }
 
-function getStyle(cb) {
+function getStyle (cb) {
   request({ uri: "https://github.com/aheckmann/greadme", timeout: 4000, headers: { 'user-agent': 'greadme' } }, function (err, res, body) {
     try {
-      var css = []
+      var css = [];
       if (err) {
         // ignore error, use old css instead
         console.log('\u001B[35m  %s\u001B[0m', 'could not retreive latest github css. using old version');
@@ -57,7 +67,7 @@ function getStyle(cb) {
   });
 }
 
-function listDir(dir) {
+function listDir (dir) {
   var all = fs.readdirSync(dir);
   var md = [];
   var dirs = dir == process.cwd() ? [] : ['..'];
@@ -69,7 +79,7 @@ function listDir(dir) {
       md.push(item);
     }
   });
-  function canonical(item) {
+  function canonical (item) {
     return {
       href: path.join(dir, item).replace(process.cwd(), '').replace(/\\/g, '/') || '/',
       name: item
@@ -81,7 +91,7 @@ function listDir(dir) {
   }
 }
 
-function render(fileContent, cb) {
+function render (fileContent, cb) {
   request({
     url: 'https://api.github.com/markdown/raw',
     body: fileContent,
