@@ -26,6 +26,53 @@ if (~(pIndex = args.indexOf('--port'))) {
 
 var fileArg = args[2];
 
+// get github css
+getStyle(function (err, css) {
+  if (err) throw err;
+
+  app.use(express.favicon());
+  app.use('/css', express.static(path.join(__dirname, '..', 'css')))
+  app.use(function (req, res, next) {
+    if (fileArg) {
+      render(fs.readFileSync(path.join(process.cwd(), fileArg), 'utf8'), function (err, markdown) {
+        if (err) return next(err);
+        res.render(path.join(__dirname, '..', 'view.ejs'), {
+          css: css,
+          markdown: markdown,
+          dir: false
+        });
+      });
+    } else {
+      var p = path.join(process.cwd(), req.url.substring(1));
+      var stat = fs.statSync(p);
+      var dir = stat.isDirectory();
+      var file = dir ? readme(p) : p;
+      var contents = file ? fs.readFileSync(file, 'utf8') : 'No readme found';
+      render(contents, function (err, markdown) {
+        if (err) return next(err);
+        res.render(path.join(__dirname, '..', 'view.ejs'), {
+          css: css,
+          markdown: markdown,
+          dir: dir && listDir(p)
+        });
+      });
+    }
+  });
+  var server = http.createServer(app).listen(port, host)
+
+  server.on('listening', function () {
+    var url = 'http://' + host + ':' + port
+    console.log("\n  view your markdown at \u001B[32m%s/\u001B[0m", url)
+    console.log('  press CTRL+C to quit')
+
+    open(url, function (err) {
+      // ignore errors
+    })
+  });
+
+})
+
+
 function readme (dir) {
   var exts = 'markdown md'.split(' ');
   var file;
@@ -110,50 +157,4 @@ function render (fileContent, cb) {
     }
   })
 }
-
-// get github css
-getStyle(function (err, css) {
-  if (err) throw err;
-
-  app.use(express.favicon());
-  app.use('/css', express.static(path.join(__dirname, '..', 'css')))
-  app.use(function (req, res, next) {
-    if (fileArg) {
-      render(fs.readFileSync(path.join(process.cwd(), fileArg), 'utf8'), function (err, markdown) {
-        if (err) return next(err);
-        res.render(path.join(__dirname, '..', 'view.ejs'), {
-          css: css,
-          markdown: markdown,
-          dir: false
-        });
-      });
-    } else {
-      var p = path.join(process.cwd(), req.url.substring(1));
-      var stat = fs.statSync(p);
-      var dir = stat.isDirectory();
-      var file = dir ? readme(p) : p;
-      var contents = file ? fs.readFileSync(file, 'utf8') : 'No readme found';
-      render(contents, function (err, markdown) {
-        if (err) return next(err);
-        res.render(path.join(__dirname, '..', 'view.ejs'), {
-          css: css,
-          markdown: markdown,
-          dir: dir && listDir(p)
-        });
-      });
-    }
-  });
-  var server = http.createServer(app).listen(port, host)
-
-  server.on('listening', function () {
-    var url = 'http://' + host + ':' + port
-    console.log("\n  view your markdown at \u001B[32m%s/\u001B[0m", url)
-    console.log('  press CTRL+C to quit')
-
-    open(url, function (err) {
-      // ignore errors
-    })
-  });
-
-})
 
