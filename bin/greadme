@@ -3,16 +3,16 @@
 var express = require('express');
 var app = express();
 var path = require('path');
-var fs = require('fs')
-var md = require('marked')
-var http = require('http')
-var request = require('request')
+var fs = require('fs');
+var md = require('marked');
+var http = require('http');
+var request = require('request');
 var open = require('open');
 
 process.title = 'greadme';
 
 var args = process.argv.slice();
-var host = 'localhost';
+var host;
 var port;
 var pIndex;
 
@@ -23,6 +23,15 @@ if (~(pIndex = args.indexOf('--port'))) {
 } else {
   port = 8124;
 }
+
+if (~(pIndex = args.indexOf('--host'))) {
+  host = args[pIndex + 1];
+  // remove port arguments
+  args.splice(pIndex, 2);
+} else {
+  host = '0.0.0.0';
+}
+
 
 var fileArg = args[2];
 
@@ -58,19 +67,19 @@ getStyle(function (err, css) {
       });
     }
   });
-  var server = http.createServer(app).listen(port, host)
+  var server = http.createServer(app).listen(port, host);
 
   server.on('listening', function () {
-    var url = 'http://' + host + ':' + port
-    console.log("\n  view your markdown at \u001B[32m%s/\u001B[0m", url)
-    console.log('  press CTRL+C to quit')
+    var url = 'http://' + host + ':' + port;
+    console.log("\n  view your markdown at \u001B[32m%s/\u001B[0m", url);
+    console.log('  press CTRL+C to quit');
 
     open(url, function (err) {
       // ignore errors
-    })
+    });
   });
 
-})
+});
 
 
 function readme (dir) {
@@ -87,7 +96,7 @@ function readme (dir) {
       } catch (err) {
         return false;
       }
-    })
+    });
   })) {
     return file;
   }
@@ -104,8 +113,8 @@ function getStyle (cb) {
       } else {
         var rgx = /href=["']([^"']+\.css)/g
         ;(body || '').replace(rgx, function (_, href) {
-          css.unshift(href);
-        })
+          css.unshift(href)
+        });
       }
     } catch (ex) {
       return cb(ex);
@@ -135,7 +144,7 @@ function listDir (dir) {
   return {
     md: md.map(canonical),
     dirs: dirs.map(canonical)
-  }
+  };
 }
 
 function render (fileContent, cb) {
@@ -155,6 +164,6 @@ function render (fileContent, cb) {
     } else {
       return cb(null, body);
     }
-  })
+  });
 }
 
