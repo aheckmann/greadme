@@ -1,3 +1,10 @@
+
+0.3.0 / 2014-05-15
+==================
+
+ * added; --host support [matthias-guenther](https://github.com/matthias-guenther)
+ * changed; default host is now 0.0.0.0 [matthias-guenther](https://github.com/matthias-guenther)
+
 0.2.0 / 2013-11-06
 ==================
 
