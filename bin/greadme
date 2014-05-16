@@ -24,6 +24,15 @@ if (~(pIndex = args.indexOf('--port'))) {
   port = 8124;
 }
 
+if (~(pIndex = args.indexOf('--host'))) {
+  host = args[pIndex + 1];
+  // remove port arguments
+  args.splice(pIndex, 2);
+} else {
+  host = 'localhost';
+}
+
+
 var fileArg = args[2];
 
 // get github css
