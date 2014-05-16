@@ -40,7 +40,7 @@ getStyle(function (err, css) {
   if (err) throw err;
 
   app.use(express.favicon());
-  app.use('/css', express.static(path.join(__dirname, '..', 'css')));
+  app.use('/css', express.static(path.join(__dirname, '..', 'css')))
   app.use(function (req, res, next) {
     if (fileArg) {
       render(fs.readFileSync(path.join(process.cwd(), fileArg), 'utf8'), function (err, markdown) {
@@ -109,11 +109,11 @@ function getStyle (cb) {
       if (err) {
         // ignore error, use old css instead
         console.log('\u001B[35m  %s\u001B[0m', 'could not retreive latest github css. using old version');
-        css.unshift('/css/style.css');
+        css.unshift('/css/style.css')
       } else {
         var rgx = /href=["']([^"']+\.css)/g
         ;(body || '').replace(rgx, function (_, href) {
-          css.unshift(href);
+          css.unshift(href)
         });
       }
     } catch (ex) {
