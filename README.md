@@ -32,11 +32,11 @@ Files with the following extensions are rendered.
 - .markdown
 
 
-The default port is `8124` and the default host is `localhost`. You can change these settings by passing the `--port`
+The default port is `8124` and the default host is `0.0.0.0`. You can change these settings by passing the `--port`
 and `--host` option. For example:
 
 
-    $ greadme --host 0.0.0.0 --port 7220
+    $ greadme --host 127.0.0.0 --port 7220
 
 
 ## Notes

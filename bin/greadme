@@ -12,7 +12,7 @@ var open = require('open');
 process.title = 'greadme';
 
 var args = process.argv.slice();
-var host = 'localhost';
+var host;
 var port;
 var pIndex;
 
@@ -29,7 +29,7 @@ if (~(pIndex = args.indexOf('--host'))) {
   // remove port arguments
   args.splice(pIndex, 2);
 } else {
-  host = 'localhost';
+  host = '0.0.0.0';
 }
 
 
