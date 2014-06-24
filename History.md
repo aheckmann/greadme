@@ -1,4 +1,9 @@
 
+0.3.1 / 2014-06-23
+==================
+
+ * fixed; default host should be localhost for windows #15
+
 0.3.0 / 2014-05-15
 ==================
 
