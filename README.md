@@ -2,7 +2,7 @@
 
 Locally preview your markdown, Github style.
 
-![](https://dl.dropbox.com/u/11198966/greadme-screenshot.png)
+![](https://dl.dropboxusercontent.com/u/4034363/greadme.png)
 
 ## Installation
 
