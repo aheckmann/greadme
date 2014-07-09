@@ -2,7 +2,7 @@
 0.3.2 / 2014-06-27
 ==================
 
- * changed; uses GitHub Octicons for directory preview [edwellbrook](https://github.com/edwellbrook)
+ * changed; uses GitHub Octicons for directory previews [edwellbrook](https://github.com/edwellbrook)
 
 0.3.1 / 2014-06-23
 ==================
