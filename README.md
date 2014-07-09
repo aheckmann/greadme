@@ -2,7 +2,7 @@
 
 Locally preview your markdown, Github style.
 
-![](https://dl.dropbox.com/u/11198966/greadme-screenshot.png)
+![](https://dl.dropboxusercontent.com/u/4034363/greadme.png)
 
 ## Installation
 
@@ -49,6 +49,7 @@ An attempt is made to use the [Github markdown rendering api](http://developer.g
 - [Aaron Heckmann](https://github.com/aheckmann)
 - [Forbes Lindesay](https://github.com/ForbesLindesay)
 - [Matthias Günther](https://github.com/matthias-guenther)
+- [Ed Wellbrook](https://github.com/edwellbrook)
 
 
 ## License

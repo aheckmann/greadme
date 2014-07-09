@@ -1,6 +1,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="/css/octicons.css">
     <% css.forEach(function (href) { %>
       <link href="<%= href %>" rel="stylesheet">
     <% }) %>
@@ -15,13 +16,13 @@
         <tbody class="tree-entries">
           <% dir.dirs.forEach(function (dir) { %>
           <tr>
-            <td class="icon"><img width="20" src="/css/directory.png"/></td>
+            <td class="icon"><span class="octicon octicon-file-directory"></span></td>
             <td class="content"><a href="<%= dir.href %>"><%= dir.name %></a></td>
           </tr>
           <% }) %>
           <% dir.md.forEach(function (file) { %>
           <tr>
-            <td class="icon"><img width="20" src="/css/file.png"/></td>
+            <td class="icon"><span class="octicon octicon-file-text"></span></td>
             <td class="content"><a href="<%= file.href %>"><%= file.name %></a></td>
           </tr>
           <% }) %>
