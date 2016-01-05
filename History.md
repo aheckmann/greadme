@@ -1,4 +1,9 @@
 
+1.0.0 / 2016-01-05
+==================
+
+ * added support for serving images #19 [ForbesLindesay](https://github.com/ForbesLindesay)
+
 0.3.3 / 2014-08-26
 ==================
 
