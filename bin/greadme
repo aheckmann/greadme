@@ -54,6 +54,9 @@ getStyle(function (err, css) {
     } else {
       var p = path.join(process.cwd(), req.url.substring(1));
       var stat = fs.statSync(p);
+      if (stat.isFile() && p.indexOf('md') === -1 && p.indexOf('markdown') === -1) {
+        res.sendfile(p);
+      }
       var dir = stat.isDirectory();
       var file = dir ? readme(p) : p;
       var contents = file ? fs.readFileSync(file, 'utf8') : 'No readme found';
