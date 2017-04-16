@@ -1,4 +1,4 @@
-#greadme
+# greadme
 
 Locally preview your markdown, Github style.
 
