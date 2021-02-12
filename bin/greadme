@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
 var express = require('express');
-var app = express();
 var path = require('path');
 var fs = require('fs');
 var md = require('marked');
 var http = require('http');
-var request = require('request');
+var fetch = require('node-fetch');
 var open = require('open');
+var favicon = require('express-favicon-short-circuit');
+
+var app = express();
+app.set('view engine', 'ejs');
 
 process.title = 'greadme';
 
@@ -39,7 +42,7 @@ var fileArg = args[2];
 getStyle(function (err, css) {
   if (err) throw err;
 
-  app.use(express.favicon());
+  app.use(favicon);
   app.use('/css', express.static(path.join(__dirname, '..', 'css')))
   app.use(function (req, res, next) {
     if (fileArg) {
@@ -106,24 +109,31 @@ function readme (dir) {
 }
 
 function getStyle (cb) {
-  request({ uri: "https://github.com/aheckmann/greadme", timeout: 4000, headers: { 'user-agent': 'greadme' } }, function (err, res, body) {
-    try {
-      var css = [];
-      if (err) {
+  var css = [];
+
+  fetch('https://github.com/aheckmann/greadme', { timeout: 4000, headers: { 'user-agent': 'greadme' } })
+    .then(res => {
+      if (!res.ok) {
+        // Go to the error handler
+        throw new Error();
+      }
+      return res.text();
+    })
+    .then(body => {
+      var rgx = /href=["']([^"']+\.css)/g
+      ;(body || '').replace(rgx, function (_, href) {
+        css.unshift(href)
+      });
+    })
+    .then(
+      () => cb(null, css),
+      () => {
         // ignore error, use old css instead
         console.log('\u001B[35m  %s\u001B[0m', 'could not retreive latest github css. using old version');
-        css.unshift('/css/style.css')
-      } else {
-        var rgx = /href=["']([^"']+\.css)/g
-        ;(body || '').replace(rgx, function (_, href) {
-          css.unshift(href)
-        });
+        css.unshift('/css/style.css');
+        cb(null, css);
       }
-    } catch (ex) {
-      return cb(ex);
-    }
-    cb(null, css);
-  });
+    );
 }
 
 function listDir (dir) {
@@ -151,22 +161,26 @@ function listDir (dir) {
 }
 
 function render (fileContent, cb) {
-  request({
-    url: 'https://api.github.com/markdown/raw',
-    body: fileContent,
+  fetch('https://api.github.com/markdown/raw', {
     method: 'POST',
+    body: fileContent,
     headers: {
       'content-type': 'text/plain',
       'user-agent': 'greadme'
     },
     timeout: 2000
-  }, function (err, res, body) {
-    if (err) console.log(err);
-    if (err || res.statusCode != 200) {
-      return cb(null, md(fileContent));
-    } else {
-      return cb(null, body);
+  })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error('Received ' + res.status + ' status from the GitHub API');
     }
-  });
+    return res.text();
+  })
+  .then(
+    body => cb(null, body),
+    err => {
+      console.log(err);
+      cb(null, md(fileContent));
+    }
+  );
 }
-

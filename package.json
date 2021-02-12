@@ -5,9 +5,6 @@
   "bin": {
     "greadme": "./bin/greadme"
   },
-  "scripts": {
-    "test": "make test"
-  },
   "keywords": [
     "readme",
     "markdown",
@@ -18,14 +15,12 @@
     "preview"
   ],
   "dependencies": {
-    "marked": "0.3.2",
-    "request": "2.40.0",
-    "express": "3.3.3",
-    "ejs": "0.8.4",
-    "open": "0.0.3"
-  },
-  "devDependencies": {
-    "mocha": "1.4.1"
+    "ejs": "3.1.6",
+    "express": "4.17.1",
+    "express-favicon-short-circuit": "^1.2.0",
+    "marked": "2.0.0",
+    "node-fetch": "2.6.1",
+    "open": "7.4.0"
   },
   "author": "Aaron Heckmann <aaron.heckmann+github@gmail.com>",
   "license": "MIT",
