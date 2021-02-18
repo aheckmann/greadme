@@ -8,6 +8,19 @@
     <style type="text/css">
        #readme, #file-explorer { width: 920px;margin: 0 auto; }
     </style>
+    <script>
+    window.addEventListener('hashchange', () => {
+      if (document.querySelector(':target')) {
+        return;
+      }
+
+      const hash = location.hash.substring(1).toLowerCase();
+      const element = document.querySelector(`#user-content-${hash}`);
+      if (element) {
+        element.scrollIntoView();
+      }
+    });
+    </script>
   </head>
   <body>
     <% if (dir) { %>
