@@ -46,11 +46,7 @@ An attempt is made to use the [Github markdown rendering api](http://developer.g
 
 ## Contributors
 
-- [Aaron Heckmann](https://github.com/aheckmann)
-- [Forbes Lindesay](https://github.com/ForbesLindesay)
-- [Matthias Günther](https://github.com/matthias-guenther)
-- [Ed Wellbrook](https://github.com/edwellbrook)
-
+https://github.com/aheckmann/greadme/graphs/contributors
 
 ## License
 
