@@ -1,13 +1,17 @@
 #!/usr/bin/env node
 
-var express = require('express');
-var path = require('path');
-var fs = require('fs');
-var md = require('marked');
-var http = require('http');
-var fetch = require('node-fetch');
-var open = require('open');
-var favicon = require('express-favicon-short-circuit');
+import * as path from 'node:path';
+import * as fs from 'node:fs';
+import * as http from 'node:http';
+import { fileURLToPath } from 'node:url';
+import fetch from 'node-fetch';
+import express from 'express';
+import { marked as md } from 'marked';
+import open from 'open';
+import favicon from 'express-favicon-short-circuit';
+
+const cssPath = fileURLToPath(new URL('../css', import.meta.url));
+const viewPath = fileURLToPath(new URL('../view.ejs', import.meta.url));
 
 var app = express();
 app.set('view engine', 'ejs');
@@ -43,12 +47,12 @@ getStyle(function (err, css) {
   if (err) throw err;
 
   app.use(favicon);
-  app.use('/css', express.static(path.join(__dirname, '..', 'css')))
+  app.use('/css', express.static(cssPath))
   app.use(function (req, res, next) {
     if (fileArg) {
       render(fs.readFileSync(path.join(process.cwd(), fileArg), 'utf8'), function (err, markdown) {
         if (err) return next(err);
-        res.render(path.join(__dirname, '..', 'view.ejs'), {
+        res.render(viewPath, {
           css: css,
           markdown: markdown,
           dir: false
@@ -65,7 +69,7 @@ getStyle(function (err, css) {
       var contents = file ? fs.readFileSync(file, 'utf8') : 'No readme found';
       render(contents, function (err, markdown) {
         if (err) return next(err);
-        res.render(path.join(__dirname, '..', 'view.ejs'), {
+        res.render(viewPath, {
           css: css,
           markdown: markdown,
           dir: dir && listDir(p)

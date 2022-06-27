@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "Locally preview your markdown, Github style",
   "bin": {
-    "greadme": "./bin/greadme"
+    "greadme": "./bin/greadme.mjs"
   },
   "keywords": [
     "readme",
@@ -15,12 +15,12 @@
     "preview"
   ],
   "dependencies": {
-    "ejs": "3.1.7",
-    "express": "4.17.1",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
     "express-favicon-short-circuit": "^1.2.0",
-    "marked": "2.0.0",
-    "node-fetch": "2.6.7",
-    "open": "7.4.0"
+    "marked": "^4.0.17",
+    "node-fetch": "^3.2.6",
+    "open": "^8.4.0"
   },
   "author": "Aaron Heckmann <aaron.heckmann+github@gmail.com>",
   "license": "MIT",
