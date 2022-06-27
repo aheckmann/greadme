@@ -42,53 +42,49 @@ if (~(pIndex = args.indexOf('--host'))) {
 
 var fileArg = args[2];
 
-// get github css
-getStyle(function (err, css) {
-  if (err) throw err;
+const css = await getStyle();
 
-  app.use(favicon);
-  app.use('/css', express.static(cssPath))
-  app.use(function (req, res, next) {
-    if (fileArg) {
-      render(fs.readFileSync(path.join(process.cwd(), fileArg), 'utf8'), function (err, markdown) {
-        if (err) return next(err);
-        res.render(viewPath, {
-          css: css,
-          markdown: markdown,
-          dir: false
-        });
+app.use(favicon);
+app.use('/css', express.static(cssPath))
+app.use(function (req, res, next) {
+  if (fileArg) {
+    render(fs.readFileSync(path.join(process.cwd(), fileArg), 'utf8'), function (err, markdown) {
+      if (err) return next(err);
+      res.render(viewPath, {
+        css: css,
+        markdown: markdown,
+        dir: false
       });
-    } else {
-      var p = path.join(process.cwd(), req.url.substring(1));
-      var stat = fs.statSync(p);
-      if (stat.isFile() && p.indexOf('md') === -1 && p.indexOf('markdown') === -1) {
-        res.sendfile(p);
-      }
-      var dir = stat.isDirectory();
-      var file = dir ? readme(p) : p;
-      var contents = file ? fs.readFileSync(file, 'utf8') : 'No readme found';
-      render(contents, function (err, markdown) {
-        if (err) return next(err);
-        res.render(viewPath, {
-          css: css,
-          markdown: markdown,
-          dir: dir && listDir(p)
-        });
-      });
-    }
-  });
-  var server = http.createServer(app).listen(port, host);
-
-  server.on('listening', function () {
-    var url = 'http://' + host + ':' + port;
-    console.log("\n  view your markdown at \u001B[32m%s/\u001B[0m", url);
-    console.log('  press CTRL+C to quit');
-
-    open(url, function (err) {
-      // ignore errors
     });
-  });
+  } else {
+    var p = path.join(process.cwd(), req.url.substring(1));
+    var stat = fs.statSync(p);
+    if (stat.isFile() && p.indexOf('md') === -1 && p.indexOf('markdown') === -1) {
+      res.sendfile(p);
+    }
+    var dir = stat.isDirectory();
+    var file = dir ? readme(p) : p;
+    var contents = file ? fs.readFileSync(file, 'utf8') : 'No readme found';
+    render(contents, function (err, markdown) {
+      if (err) return next(err);
+      res.render(viewPath, {
+        css: css,
+        markdown: markdown,
+        dir: dir && listDir(p)
+      });
+    });
+  }
+});
+var server = http.createServer(app).listen(port, host);
 
+server.on('listening', function () {
+  var url = 'http://' + host + ':' + port;
+  console.log("\n  view your markdown at \u001B[32m%s/\u001B[0m", url);
+  console.log('  press CTRL+C to quit');
+
+  open(url, function (err) {
+    // ignore errors
+  });
 });
 
 
@@ -112,32 +108,23 @@ function readme (dir) {
   }
 }
 
-function getStyle (cb) {
-  var css = [];
+async function getStyle() {
+  try {
+    const res = await fetch('https://github.com/aheckmann/greadme', { timeout: 4000, headers: { 'user-agent': 'greadme' } });
 
-  fetch('https://github.com/aheckmann/greadme', { timeout: 4000, headers: { 'user-agent': 'greadme' } })
-    .then(res => {
-      if (!res.ok) {
-        // Go to the error handler
-        throw new Error();
-      }
-      return res.text();
-    })
-    .then(body => {
-      var rgx = /href=["']([^"']+\.css)/g
-      ;(body || '').replace(rgx, function (_, href) {
-        css.unshift(href)
-      });
-    })
-    .then(
-      () => cb(null, css),
-      () => {
-        // ignore error, use old css instead
-        console.log('\u001B[35m  %s\u001B[0m', 'could not retreive latest github css. using old version');
-        css.unshift('/css/style.css');
-        cb(null, css);
-      }
-    );
+    if (!res.ok) {
+      // Go to the error handler
+      throw new Error();
+    }
+
+    const body = await res.text();
+
+    return [...body.matchAll(/href=["']([^"']+\.css)/g)].map(result => result[1]);
+  } catch {
+    // ignore error, use old css instead
+    console.log('\u001B[35m  %s\u001B[0m', 'could not retreive latest github css. using old version');
+    return ['/css/style.css'];
+  }
 }
 
 function listDir (dir) {
