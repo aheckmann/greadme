@@ -1,52 +1,97 @@
-<html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="/css/octicons.css">
-    <% css.forEach(function (href) { %>
-      <link href="<%= href %>" rel="stylesheet">
-    <% }) %>
-    <style type="text/css">
-       #readme, #file-explorer { width: 920px;margin: 0 auto; }
-    </style>
-    <script>
-    window.addEventListener('hashchange', () => {
-      if (document.querySelector(':target')) {
-        return;
-      }
+<!DOCTYPE html>
+<html data-color-mode="auto" data-light-theme="light">
 
-      const hash = location.hash.substring(1).toLowerCase();
-      const element = document.querySelector(`#user-content-${hash}`);
-      if (element) {
-        element.scrollIntoView();
-      }
-    });
-    </script>
-  </head>
-  <body>
-    <% if (dir) { %>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/css/octicons.css">
+  <% css.forEach(function (href) { %>
+    <link href="<%= href %>" rel="stylesheet">
+    <% }) %>
+      <style type="text/css">
+        #readme,
+        #file-explorer {
+          width: 920px;
+          margin: 0 auto;
+        }
+
+        .container {
+          display: flex;
+          flex-direction: column;
+          gap: var(--stack-gap-normal);
+        }
+
+        .tree-browser {
+          border: var(--borderWidth-thin) solid;
+          border-collapse: initial;
+          border-color: var(--borderColor-default);
+          border-radius: var(--borderRadius-medium);
+          border-spacing: 0;
+          overflow: hidden;
+          table-layout: fixed;
+          width: 100%;
+        }
+
+        .tree-browser .react-directory-row .icon {
+          width: 28px;
+        }
+
+        .markdown-body {
+          border: var(--borderWidth-thin) solid;
+          border-color: var(--borderColor-default);
+          border-radius: var(--borderRadius-medium);
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+          padding: 16px;
+        }
+      </style>
+      <script>
+        window.addEventListener('hashchange', () => {
+          if (document.querySelector(':target')) {
+            return;
+          }
+
+          const hash = location.hash.substring(1).toLowerCase();
+          const element = document.querySelector(`#user-content-${hash}`);
+          if (element) {
+            element.scrollIntoView();
+          }
+        });
+      </script>
+</head>
+
+<body>
+  <div class="container">
+  <% if (dir) { %>
     <div id="file-explorer" class="bubble tree-browser-wrapper">
       <table class="tree-browser css-truncate" cellpadding="0" cellspacing="0">
         <tbody class="tree-entries">
           <% dir.dirs.forEach(function (dir) { %>
-          <tr>
-            <td class="icon"><span class="octicon octicon-file-directory"></span></td>
-            <td class="content"><a href="<%= dir.href %>"><%= dir.name %></a></td>
-          </tr>
-          <% }) %>
-          <% dir.md.forEach(function (file) { %>
-          <tr>
-            <td class="icon"><span class="octicon octicon-file-text"></span></td>
-            <td class="content"><a href="<%= file.href %>"><%= file.name %></a></td>
-          </tr>
-          <% }) %>
+            <tr class="react-directory-row">
+              <td class="icon"><span class="octicon octicon-file-directory"></span></td>
+              <td class="content"><a href="<%= dir.href %>">
+                  <%= dir.name %>
+                </a></td>
+            </tr>
+            <% }) %>
+              <% dir.md.forEach(function (file) { %>
+                <tr class="react-directory-row">
+                  <td class="icon"><span class="octicon octicon-file-text"></span></td>
+                  <td class="content"><a href="<%= file.href %>">
+                      <%= file.name %>
+                    </a></td>
+                </tr>
+                <% }) %>
         </tbody>
       </table>
     </div>
     <% } %>
-    <div id="readme">
-      <article class="markdown-body entry-content">
-        <%- markdown %>
-      </article>
-    </div>
-  </body>
+      <div id="readme">
+        <article class="markdown-body entry-content">
+          <%- markdown %>
+        </article>
+      </div>
+  </div>
+</body>
+
 </html>

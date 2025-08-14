@@ -18,10 +18,10 @@ app.set('view engine', 'ejs');
 
 process.title = 'greadme';
 
-var args = process.argv.slice();
-var host;
-var port;
-var pIndex;
+let args = process.argv.slice();
+let host;
+let port;
+let pIndex;
 
 if (~(pIndex = args.indexOf('--port'))) {
   port = args[pIndex + 1];
@@ -39,9 +39,7 @@ if (~(pIndex = args.indexOf('--host'))) {
   host = 'localhost';
 }
 
-
-var fileArg = args[2];
-
+const fileArg = args[2];
 const css = await getStyle();
 
 app.use(favicon);
@@ -57,14 +55,16 @@ app.use(function (req, res, next) {
       });
     });
   } else {
-    var p = path.join(process.cwd(), req.url.substring(1));
-    var stat = fs.statSync(p);
-    if (stat.isFile() && p.indexOf('md') === -1 && p.indexOf('markdown') === -1) {
+    const p = path.join(process.cwd(), req.url.substring(1));
+    const stat = tryStatSync(p);
+    if (stat && stat.isFile() && !p.endsWith('md') && !p.endsWith('markdown')) {
       res.sendfile(p);
+      return;
     }
-    var dir = stat.isDirectory();
-    var file = dir ? readme(p) : p;
-    var contents = file ? fs.readFileSync(file, 'utf8') : 'No readme found';
+    const dir = stat && stat.isDirectory();
+    const file = dir ? readme(p) : p;
+    const fileStat = tryStatSync(file);
+    const contents = fileStat ? fs.readFileSync(file, 'utf8') : 'No readme found';
     render(contents, function (err, markdown) {
       if (err) return next(err);
       res.render(viewPath, {
@@ -75,10 +75,10 @@ app.use(function (req, res, next) {
     });
   }
 });
-var server = http.createServer(app).listen(port, host);
+const server = http.createServer(app).listen(port, host);
 
 server.on('listening', function () {
-  var url = 'http://' + host + ':' + port;
+  const url = 'http://' + host + ':' + port;
   console.log("\n  view your markdown at \u001B[32m%s/\u001B[0m", url);
   console.log('  press CTRL+C to quit');
 
@@ -88,7 +88,7 @@ server.on('listening', function () {
 });
 
 
-function readme (dir) {
+function readme(dir) {
   var exts = 'markdown md'.split(' ');
   var file;
   var names = 'README Readme readme'.split(' ');
@@ -127,19 +127,19 @@ async function getStyle() {
   }
 }
 
-function listDir (dir) {
-  var all = fs.readdirSync(dir);
-  var md = [];
-  var dirs = dir == process.cwd() ? [] : ['..'];
+function listDir(dir) {
+  const all = fs.readdirSync(dir);
+  const md = [];
+  const dirs = dir == process.cwd() ? [] : ['..'];
   all.forEach(function (item) {
-    var stat = fs.statSync(path.join(dir, item));
+    const stat = fs.statSync(path.join(dir, item));
     if (stat.isDirectory()) {
       dirs.push(item);
     } else if (stat.isFile() && (/\.md$/.test(item) || /\.markdown$/.test(item))) {
       md.push(item);
     }
   });
-  function canonical (item) {
+  function canonical(item) {
     return {
       href: path.join(dir, item).replace(process.cwd(), '').replace(/\\/g, '/') || '/',
       name: item
@@ -151,7 +151,7 @@ function listDir (dir) {
   };
 }
 
-function render (fileContent, cb) {
+function render(fileContent, cb) {
   fetch('https://api.github.com/markdown/raw', {
     method: 'POST',
     body: fileContent,
@@ -161,17 +161,25 @@ function render (fileContent, cb) {
     },
     timeout: 2000
   })
-  .then(res => {
-    if (!res.ok) {
-      throw new Error('Received ' + res.status + ' status from the GitHub API');
-    }
-    return res.text();
-  })
-  .then(
-    body => cb(null, body),
-    err => {
-      console.log(err);
-      cb(null, md(fileContent));
-    }
-  );
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('Received ' + res.status + ' status from the GitHub API');
+      }
+      return res.text();
+    })
+    .then(
+      body => cb(null, body),
+      err => {
+        console.log(err);
+        cb(null, md(fileContent));
+      }
+    );
 }
+
+const tryStatSync = (path) => {
+  try {
+    return fs.statSync(path);
+  } catch (err) {
+    return null;
+  }
+};
