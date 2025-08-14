@@ -2,7 +2,7 @@
 
 Locally preview your markdown, Github style.
 
-<img style="background-color:#e2e2e2;padding:0.5rem;border:0 solid #e0e4ec; border-radius:0.75em;box-sizing:border-box;margin:0;" alt="greadme screenshot" src="greadme.png" />
+<img style="background-color:#e2e2e2;padding:0.5rem;border:0 solid #e0e4ec; border-radius:0.75em;box-sizing:border-box;margin:0;" alt="greadme screenshot" src="./greadme.png" />
 
 ## Installation
 
