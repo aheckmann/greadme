@@ -57,7 +57,7 @@ app.use(function (req, res, next) {
     const p = path.join(process.cwd(), req.url.substring(1));
     const stat = tryStatSync(p);
     if (stat && stat.isFile() && !p.endsWith('md') && !p.endsWith('markdown')) {
-      res.sendfile(p);
+      res.sendFile(p);
       return;
     }
     const dir = stat && stat.isDirectory();
