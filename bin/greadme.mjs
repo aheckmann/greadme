@@ -4,7 +4,6 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import * as http from 'node:http';
 import { fileURLToPath } from 'node:url';
-import fetch from 'node-fetch';
 import express from 'express';
 import { marked as md } from 'marked';
 import open from 'open';
